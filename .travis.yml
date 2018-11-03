@@ -10,11 +10,10 @@ install:
 - pip install -r requirements.txt
 
 script:
-- python manage.py test
 - coverage run --source='.' manage.py test
 
 after_success:
-  - bash < (curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
 #- coverage run --source=habitica_slack manage.py test # create test coverage report
 
 #after_script:
