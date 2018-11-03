@@ -45,10 +45,10 @@ class NotAuthorized(Exception):
         Exception.__init__(self)
 
 
-class LockedAccount(Exception):
+class TweetNotFound(Exception):
 
-    def __init__(self, message):
-        Exception.__init__(self, message)
+    def __init__(self):
+        Exception.__init__(self)
 
 
 class InvalidUser(Exception):

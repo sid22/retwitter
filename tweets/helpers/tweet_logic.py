@@ -1,6 +1,6 @@
 from django.conf import settings
 import datetime, uuid
-from account.utils.custom_exceptions import EmptyException, NotAuthorized
+from account.utils.custom_exceptions import EmptyException, NotAuthorized, TweetNotFound
 
 class TweetAll:
     def __init__(self):
@@ -26,7 +26,10 @@ class TweetAll:
                 "is_retweet": False,
                 "before_retweet_user": None,
                 "before_tweet_id": None,
-                "replies": []
+                "replies": [],
+                "replies_count": 0,
+                "is_threaded": False,
+                "thread_id": None,
             }
             inserted_tweet = self.db.tweets.insert_one(new_tweet)
             res['message'] = {"Success": "Tweet created succesfully!", "tweet_id": inserted_tweet.inserted_id}
@@ -138,7 +141,9 @@ class TweetAll:
                 "is_retweet": True,
                 "before_retweet_user": original_tweet['user_id'],
                 "before_tweet_id": original_tweet["_id"],
-                "replies": []
+                "replies": [],
+                "is_threaded": False,
+                "thread_id": None,
             }
             new_tweet = self.db.tweets.insert_one(retweet_tweet)
             update_query = { "$push": { "retweet_list": { "$each": [ retweet_tweet["_id"] ] } }, 
@@ -153,6 +158,94 @@ class TweetAll:
         except EmptyException as e: 
             res['message'] = {"Error": str(e.message + " cannot be empty")}
             res['code'] = 400  
+        except Exception as e:
+            res['message'] = {"Error": "Some intenal error occured try again"}
+            res['code'] = 500
+        return res
+
+    def reply(self, user_id, tweet_id, reply_text):
+        res = {}
+        try:
+            if tweet_id == '' or None:
+                raise EmptyException("tweet id")
+            tweet_query = {"_id": tweet_id}
+            original_tweet = self.db.tweets.find_one(tweet_query)
+            if original_tweet == None:
+                raise TweetNotFound
+            reply_obj = {
+                "_id": str(uuid.uuid4()),
+                "user_id": user_id,
+                "tweet_text": reply_text,
+                "created_at": datetime.datetime.utcnow(),
+                "fav_count": 0,
+                "fav_list": [],
+                "retweet_count": 0,
+                "retweet_list": [],
+                "retweet_user_list": [],
+                "is_retweet": False,
+                "before_retweet_user": None,
+                "before_tweet_id": None,
+                "replies": [],
+                "replies_count": 0,
+                "is_threaded": False,
+                "thread_id": None,
+            }
+            new_reply = self.db.tweets.insert_one(reply_obj)
+            update_query = { "$push": { "replies": { "$each": [ reply_obj["_id"] ] } }, 
+                            "$inc": { "replies_count": 1 } }
+            update_orig_tweet = self.db.tweets.update_one(tweet_query, update_query, upsert=False)
+            success_msg = str("Reply with id " + reply_obj["_id"] + " created for tweet with id " + tweet_id + " by user with id " + user_id)
+            res['message'] = {"Success": success_msg, "reply_id": reply_obj["_id"] }
+            res['code'] = 200      
+        
+        except EmptyException as e: 
+            res['message'] = {"Error": str(e.message + " cannot be empty")}
+            res['code'] = 400 
+        except TweetNotFound:
+            res['message'] = {"Error": "No tweet found with given tweet id, cannot add reply"}
+            res['code'] = 400      
+        except Exception as e:
+            res['message'] = {"Error": "Some intenal error occured try again"}
+            res['code'] = 500
+        return res
+
+    def thread(self, user_id, thread_texts):
+        res = {}
+        try:
+            if len(thread_texts) == 0:
+                raise EmptyException("Thread count")
+            new_tweets = []
+            thread_id = str(uuid.uuid1())
+            thread_time = datetime.datetime.utcnow()
+            for single_tweet in thread_texts:
+                if single_tweet == '':
+                    raise EmptyException("Any tweet text")
+                else:
+                    new_tweet = {
+                        "_id": str(uuid.uuid4()),
+                        "user_id": user_id,
+                        "tweet_text": single_tweet,
+                        "created_at": thread_time,
+                        "fav_count": 0,
+                        "fav_list": [],
+                        "retweet_count": 0,
+                        "retweet_list": [],
+                        "retweet_user_list": [],
+                        "is_retweet": False,
+                        "before_retweet_user": None,
+                        "before_tweet_id": None,
+                        "replies": [],
+                        "replies_count": 0,
+                        "is_threaded": True,
+                        "thread_id": thread_id,
+                    }
+                    new_tweets.append(new_tweet)
+            inserted_tweets = self.db.tweets.insert_many(new_tweets)
+            res['message'] = {"Success": "Tweet created succesfully!", "thread_id": thread_id, "tweet_ids": [inserted_tweets.inserted_ids] }
+            res['code'] = 200
+        except EmptyException as e: 
+            res['message'] = {"Error": str(e.message + " cannot be empty")}
+            res['code'] = 400
         except Exception as e:
             res['message'] = {"Error": "Some intenal error occured try again"}
             res['code'] = 500
