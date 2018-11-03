@@ -62,10 +62,10 @@ class UserAuth:
             user_main = self.db.users.find_one(query_follower)
             if user_main['username'] == follow_name:
                 raise CannotFollowItself
+            
             for i in user_main['following']:
                 if i == follow_name:
                     raise AlreadyFollowingUser
-
             update_follower = { "$push": { "following": { "$each": [ follow_name ] } }} 
             query_followed = { "username": follow_name }
             update_followed = { "$push": { "followers": { "$each": [ user_main['username'] ] } }} 

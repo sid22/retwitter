@@ -12,7 +12,7 @@ from jwt import ExpiredSignatureError
 from account.utils.custom_exceptions import *
 from account.helpers.user_auth import UserAuth
 from unittest.mock import patch
-
+from .test_helpers import UpdateResult
 
 class APITests(unittest.TestCase):
     '''
@@ -50,7 +50,7 @@ class APITests(unittest.TestCase):
         self.assertEqual(res1.status_code, 405)
         self.assertEqual(res2.status_code, 400)
 
-class HandlerTests(unittest.TestCase):
+class AccountHandlerTests(unittest.TestCase):
     '''
     Testing the controller functions only
     '''
@@ -61,6 +61,7 @@ class HandlerTests(unittest.TestCase):
         self.valid_sample_user = {"_id": "07d0bdae-0393-4a50-b575-d9245efcf8cf", "password": "7bf4fb3f97cd903a9af16ba419a1a3947ffa293371e2bcb1b868ee6e4baf3aec"}
         self.invalid_sample_user = {"_id": "07d0b-d9245efcf8cf", "password": "7bf4fb3f99a1a3947ffa293371e2bcb1b868ee6e4baf3aec"}
         self.valid_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDM3ODIyNDIsInVzZXJfZHQiOiIwN2QwYmRhZTAzOTM0YTUwYjU3NWQ5MjQ1ZWZjZjhjZiJ9.i2VQ6dGj2Ywh3x6TP3zpbFpckNfPzVfXWOYB_xqmrzc"
+        self.valid_user_id = "07d0bdae-0393-4a50-b575-d9245efcf8cf"
         # print("\n" + '\x1b[0;34;40m' + 'Starting API tests...' + '\x1b[0m')
         print("\n Starting Handler tests...\n")
 
@@ -124,6 +125,33 @@ class HandlerTests(unittest.TestCase):
         self.assertEqual(res2['code'], 401)
         self.assertEqual(res3['code'], 401)
         self.assertEqual(res4['code'], 200)
+
+    @patch('pymongo.collection.Collection.find_one')
+    @patch('pymongo.collection.Collection.update_one')
+    def test_04_follow(self, mocked_updateone, mocked_findone):
+        user_main = {
+            "_id" : "07d0bdae-0393-4a50-b575-d9245efcf8cf",
+            "username" : "siddharth",
+            "password" : "7bf4fb3f97cd903a9af16ba419a1a3947ffa293371e2bcb1b868ee6e4baf3aec",
+            "date_created" : 1541180164.19358,
+            "followers" : [],
+            "following" : [],
+        }
+        mocked_findone.return_value = user_main
+        update = {
+            "modified_count" : 1,
+        }
+        a = UpdateResult()
+        mocked_updateone.return_value = a
+        # mocked_updateone.side_effect = [ update, a ]
+        user_id = [self.valid_user_id]
+        res1 = self.auser.follow(user_id[0], 'siddharth')
+        res2 = self.auser.follow(user_id[0], 'simple')
+        self.assertEqual(res1['code'], 500)
+        self.assertEqual(res2['code'], 200)
+        
+
+
 
     # def test_02_app_user_login(self):
     #     '''
