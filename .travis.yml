@@ -11,6 +11,9 @@ install:
 
 script:
 - python manage.py test
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 #- coverage run --source=habitica_slack manage.py test # create test coverage report
 
 #after_script:

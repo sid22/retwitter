@@ -60,7 +60,7 @@ class HandlerTests(unittest.TestCase):
         self.auser = UserAuth()
         self.valid_sample_user = {"_id": "07d0bdae-0393-4a50-b575-d9245efcf8cf", "password": "7bf4fb3f97cd903a9af16ba419a1a3947ffa293371e2bcb1b868ee6e4baf3aec"}
         self.invalid_sample_user = {"_id": "07d0b-d9245efcf8cf", "password": "7bf4fb3f99a1a3947ffa293371e2bcb1b868ee6e4baf3aec"}
-        
+        self.valid_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDM3ODIyNDIsInVzZXJfZHQiOiIwN2QwYmRhZTAzOTM0YTUwYjU3NWQ5MjQ1ZWZjZjhjZiJ9.i2VQ6dGj2Ywh3x6TP3zpbFpckNfPzVfXWOYB_xqmrzc"
         # print("\n" + '\x1b[0;34;40m' + 'Starting API tests...' + '\x1b[0m')
         print("\n Starting Handler tests...\n")
 
@@ -98,7 +98,7 @@ class HandlerTests(unittest.TestCase):
     @patch('pymongo.collection.Collection.find_one')
     @patch('redis.StrictRedis.set')
     def test_02_login(self, redisset, mocked_findone):
-        mocked_findone.side_effect = [self.valid_sample_user, None, None, None, None, self.invalid_sample_user]
+        mocked_findone.side_effect = [self.valid_sample_user, None, None, None, None, self.invalid_sample_user, self.invalid_sample_user]
         username = ["siddharth", '', "siddharth", '']
         password = ["siddharth", "siddharth", '', '']
         res1 = self.auser.login(username[0], password[0])
@@ -106,13 +106,24 @@ class HandlerTests(unittest.TestCase):
         res3 = self.auser.login(username[2], password[2])
         res4 = self.auser.login(username[3], password[3])
         res5 = self.auser.login(username[0], password[0])
-        res6 = self.auser.login(username[0], password[0])
         self.assertEqual(res1['code'], 200)
         self.assertEqual(res2['code'], 400)
         self.assertEqual(res3['code'], 400)
         self.assertEqual(res4['code'], 400)
         self.assertEqual(res5['code'], 401)
-        self.assertEqual(res6['code'], 401)
+    
+    @patch('redis.StrictRedis.get')
+    def test_03_chech_auth(self, redisget):
+        auth_token = [None, 'abc', self.valid_token]
+        redisget.side_effect = [None, None, 'abc', self.valid_token]
+        res1 = self.auser.check_auth(auth_token[0])
+        res2 = self.auser.check_auth(auth_token[1])
+        res3 = self.auser.check_auth(auth_token[1])
+        res4 = self.auser.check_auth(auth_token[2])
+        self.assertEqual(res1['code'], 400)
+        self.assertEqual(res2['code'], 401)
+        self.assertEqual(res3['code'], 401)
+        self.assertEqual(res4['code'], 200)
 
     # def test_02_app_user_login(self):
     #     '''
