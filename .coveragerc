@@ -8,7 +8,6 @@ omit =
     */getcoverage.py
     #omit django confs
     */retwitter/*
-    */manage.py
     */apps.py
 [html]
 directory = docs
