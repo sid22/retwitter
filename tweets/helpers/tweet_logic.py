@@ -11,7 +11,6 @@ class TweetAll:
     def create(self, user_id, tweet_text):
         res = {}
         try:
-            print(tweet_text)
             if tweet_text == '':
                 raise EmptyException("Tweet text")
             new_tweet = {
@@ -47,25 +46,20 @@ class TweetAll:
                 raise EmptyException("tweet id")
             
             to_delete_tweet = self.db.tweets.find_one({"_id": tweet_id})
-            if to_delete_tweet['user_id'] != user_id:
+            if to_delete_tweet['_id'] != user_id:
                 raise NotAuthorized
             if to_delete_tweet["is_retweet"] == True:
-                print("rtwt true")
                 ## we need to change the original also
                 original_query = {"_id": to_delete_tweet["before_tweet_id"]}
-                print(original_query)
                 original_update = { "$pull": { "retweet_list": { "$in": [ tweet_id ] } }, 
                                     "$inc": { "retweet_count": -1 }, 
                                     "$pull": { "retweet_user_list": { "$in": [ user_id ] } }}
-                print("orig made")
-                print(original_update)
                 tweet_ori_update = self.db.tweets.update_one(original_query, original_update)
-                print(tweet_ori_update)
                 deleted_tweet = self.db.tweets.delete_one({"_id": tweet_id})    
             else:    
                 deleted_tweet = self.db.tweets.delete_one({"_id": tweet_id})
             res['message'] = {"Success": "Tweet deleted succesfully!", "tweet_id": tweet_id}
-            res['code'] = 200       
+            res['code'] = 200 
         except EmptyException as e: 
             res['message'] = {"Error": str(e.message + " cannot be empty")}
             res['code'] = 400
