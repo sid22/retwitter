@@ -14,15 +14,23 @@ from account.helpers.user_auth import UserAuth
 from unittest.mock import patch
 from .test_helpers import UpdateResult
 
-class APITests(unittest.TestCase):
+class AccountAPITests(unittest.TestCase):
     '''
     Testing the controller functions only
     '''
     @classmethod
     def setUpClass(self):
+        res = {}
+        res['message'] = {"Success": "mocking"}
+        res['code'] = 200
+        auth_res = {}
+        auth_res['code'] = 200
+        auth_res['user_id'] = 'someid'
         self.client = Client()
+        self.res = res
+        self.auth_res = auth_res
         # print("\n" + '\x1b[0;34;40m' + 'Starting API tests...' + '\x1b[0m')
-        print("\n Starting API tests...\n")
+        print("\n Starting Account API tests...\n")
 
     def setUp(self):
         pass
@@ -32,7 +40,7 @@ class APITests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        print("Finished API tests...\n")
+        print("Finished Account API tests...\n")
 
     def test_01_app_basepage(self):
         '''
@@ -41,14 +49,64 @@ class APITests(unittest.TestCase):
         res1 = self.client.get('/')
         self.assertEqual(res1.status_code, 200)
 
-    def test_02_app_user_login(self):
+    @patch('account.helpers.user_auth.UserAuth.login')
+    def test_02_app_user_login(self, mock_login):
         '''
         Test the login route
         '''
+        mock_login.return_value = self.res
         res1 = self.client.get(reverse('login'))
         res2 = self.client.post(reverse('login'))
         self.assertEqual(res1.status_code, 405)
-        self.assertEqual(res2.status_code, 400)
+        self.assertEqual(res2.status_code, 200)
+
+    @patch('account.helpers.user_auth.UserAuth.logout')
+    def test_03_app_user_logout(self, mock_logout):
+        '''
+        Test the login route
+        '''
+        mock_logout.return_value = self.res
+        res1 = self.client.get(reverse('logout'))
+        res2 = self.client.post(reverse('logout'))
+        self.assertEqual(res1.status_code, 200)
+        self.assertEqual(res2.status_code, 200)
+
+    @patch('account.helpers.user_auth.UserAuth.signup')
+    def test_04_app_user_signup(self, mock_signup):
+        '''
+        Test the login route
+        '''
+        mock_signup.return_value = self.res
+        res1 = self.client.get(reverse('signup'))
+        res2 = self.client.post(reverse('signup'))
+        self.assertEqual(res1.status_code, 405)
+        self.assertEqual(res2.status_code, 200)
+
+    @patch('account.helpers.user_auth.UserAuth.check_auth')
+    @patch('account.helpers.user_auth.UserAuth.follow')
+    def test_05_app_user_follow(self, mock_follow, mock_auth):
+        '''
+        Test the login route
+        '''
+        mock_follow.return_value = self.res
+        mock_auth.return_value = self.auth_res
+        res1 = self.client.get(reverse('follow'))
+        res2 = self.client.post(reverse('follow'))
+        self.assertEqual(res1.status_code, 405)
+        self.assertEqual(res2.status_code, 200)
+
+    @patch('account.helpers.user_auth.UserAuth.check_auth')
+    @patch('account.helpers.user_auth.UserAuth.unfollow')
+    def test_06_app_user_unfollow(self, mock_unfollow, mock_auth):
+        '''
+        Test the login route
+        '''
+        mock_unfollow.return_value = self.res
+        mock_auth.return_value = self.auth_res
+        res1 = self.client.get(reverse('unfollow'))
+        res2 = self.client.post(reverse('unfollow'))
+        self.assertEqual(res1.status_code, 405)
+        self.assertEqual(res2.status_code, 200)
 
 class AccountHandlerTests(unittest.TestCase):
     '''
@@ -147,18 +205,66 @@ class AccountHandlerTests(unittest.TestCase):
         user_id = [self.valid_user_id]
         res1 = self.auser.follow(user_id[0], 'siddharth')
         res2 = self.auser.follow(user_id[0], 'simple')
-        self.assertEqual(res1['code'], 500)
+        self.assertEqual(res1['code'], 406)
+        self.assertEqual(res2['code'], 200)
+
+    @patch('pymongo.collection.Collection.find_one')
+    @patch('pymongo.collection.Collection.update_one')
+    def test_05_unfollow(self, mocked_updateone, mocked_findone):
+        user_main = {
+            "_id" : "07d0bdae-0393-4a50-b575-d9245efcf8cf",
+            "username" : "siddharth",
+            "password" : "7bf4fb3f97cd903a9af16ba419a1a3947ffa293371e2bcb1b868ee6e4baf3aec",
+            "date_created" : 1541180164.19358,
+            "followers" : [],
+            "following" : ['simple'],
+        }
+        mocked_findone.return_value = user_main
+        update = {
+            "modified_count" : 1,
+        }
+        a = UpdateResult()
+        mocked_updateone.return_value = a
+        # mocked_updateone.side_effect = [ update, a ]
+        user_id = [self.valid_user_id]
+        res1 = self.auser.unfollow(user_id[0], 'siddharth')
+        res2 = self.auser.unfollow(user_id[0], 'simple')
+        self.assertEqual(res1['code'], 406)
+        self.assertEqual(res2['code'], 200)
+        
+    @patch('redis.StrictRedis.delete')
+    def test_06_logout(self, mocked_redisdel):
+        auth_token = [None, 'some']
+        res1 = self.auser.logout(auth_token[0])
+        res2 = self.auser.logout(auth_token[1])
+        self.assertEqual(res1['code'], 400)
         self.assertEqual(res2['code'], 200)
         
 
+# class TweetAPITests(unittest.TestCase):
+#     '''
+#     Testing the controller functions only
+#     '''
+#     @classmethod
+#     def setUpClass(self):
+#         res = {}
+#         res['message'] = {"Success": "mocking"}
+#         res['code'] = 200
+#         auth_res = {}
+#         auth_res['code'] = 200
+#         auth_res['user_id'] = 'someid'
+#         self.client = Client()
+#         self.res = res
+#         self.auth_res = auth_res
+#         # print("\n" + '\x1b[0;34;40m' + 'Starting API tests...' + '\x1b[0m')
+#         print("\n Starting Tweet API tests...\n")
 
+#     def setUp(self):
+#         pass
 
-    # def test_02_app_user_login(self):
-    #     '''
-    #     Test the login route
-    #     '''
-    #     res1 = self.client.get(reverse('login'))
-    #     res2 = self.client.post(reverse('login'))
-    #     self.assertEqual(res1.status_code, 405)
-    #     self.assertEqual(res2.status_code, 400)
-        
+#     def tearDown(self):
+#         pass
+
+#     @classmethod
+#     def tearDownClass(self):
+#         print("Finished Tweet API tests...\n")

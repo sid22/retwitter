@@ -60,13 +60,10 @@ def handle_emotion(request, tweet_id):
 
 def handle_retweet(request, tweet_id):
     auth_token = request.META.get('HTTP_AUTHORIZATION')
-    print(auth_token)
     res = user_auth.check_auth(auth_token)    
-    print(res)
     if res['code'] == 200:
         if request.method == 'POST':
             res = tweet.retweet(res['user_id'], tweet_id)
-            print(res)
         else:
             res = {}
             res['message'] = {"Error": "Create tweet resource is for POST request only"}

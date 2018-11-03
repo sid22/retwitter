@@ -79,13 +79,13 @@ class UserAuth:
 
         except UserNotFound:
             res['message'] = {"Error": "The user to be followed does not exist"}
-            res['code'] = 500   
+            res['code'] = 406   
         except CannotFollowItself:
             res['message'] = {"Error": user_main['username'] + " cannot follow/unfollow itself"}
-            res['code'] = 500   
+            res['code'] = 406   
         except AlreadyFollowingUser:
             res['message'] = {"Error": user_main['username'] + " user is already following " + follow_name }
-            res['code'] = 500   
+            res['code'] = 406   
         except Exception:
             res['message'] = {"Error": "Some intenal error occured try again"}
             res['code'] = 500
@@ -116,13 +116,13 @@ class UserAuth:
 
         except UserNotFound:
             res['message'] = {"Error": "The user to be followed does not exist"}
-            res['code'] = 500   
+            res['code'] = 406   
         except CannotFollowItself:
             res['message'] = {"Error": user_main['username'] + " cannot follow/unfollow itself"}
-            res['code'] = 500   
+            res['code'] = 406   
         except ValueError:
             res['message'] = {"Error": user_main['username'] + " user is not following " + unfollow_name }
-            res['code'] = 500       
+            res['code'] = 406       
         except Exception:
             res['message'] = {"Error": "Some intenal error occured try again"}
             res['code'] = 500
