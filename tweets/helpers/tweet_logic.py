@@ -123,13 +123,6 @@ class TweetAll:
         try:
             if tweet_id == '' or None:
                 raise EmptyException("tweet id")
-            # tweet_query = {"_id": tweet_id}
-            # tweet_data = self.db.tweets.find_one(tweet_query)
-            # tolike = 1
-            # for i in tweet_data['fav_list']:
-            #     ## here we check, if user has already liked the tweet, if yes he now will unlike the tweet
-            #     if i == user_id:
-            #         tolike = 0
             tweet_query = {"_id": tweet_id}
             original_tweet = self.db.tweets.find_one(tweet_query)
             retweet_tweet = {

@@ -166,17 +166,38 @@ class TweetHandlerTests(unittest.TestCase):
         self.assertEqual(res1['code'], 400)
         self.assertEqual(res2['code'], 200)
 
-    # @patch('pymongo.collection.Collection.find_one')
-    # @patch('pymongo.collection.Collection.delete_one')
-    # def test_04_emotion(self, mocked_delete, mocked_find):
-    #     user_id = 'abcd'
-    #     tweet_id = ['', 'not']
-    #     mocked_find.return_value = {
-    #         "_id": "abcd",
-    #         "is_retweet": False
-    #     }
-    #     mocked_delete.return_value = 'asa'
-    #     res1 = self.tweet_all.view(user_id, tweet_id[0])
-    #     res2 = self.tweet_all.view(user_id, tweet_id[1])
-    #     self.assertEqual(res1['code'], 400)
-    #     self.assertEqual(res2['code'], 200)
+    @patch('pymongo.collection.Collection.find_one')
+    @patch('pymongo.collection.Collection.delete_one')
+    def test_04_emotion(self, mocked_delete, mocked_find):
+        user_id = 'abcd'
+        tweet_id = ['', 'not']
+        mocked_find.return_value = {
+            "_id": "abcd",
+            "is_retweet": False,
+            "fav_list": []
+        }
+        mocked_delete.return_value = 'asa'
+        res1 = self.tweet_all.make_emotion(user_id, tweet_id[0])
+        res2 = self.tweet_all.make_emotion(user_id, tweet_id[1])
+        self.assertEqual(res1['code'], 400)
+        self.assertEqual(res2['code'], 200)
+
+    @patch('pymongo.collection.Collection.find_one')
+    @patch('pymongo.collection.Collection.insert_one')
+    @patch('pymongo.collection.Collection.update_one')
+    def test_05_retweet(self, mocked_update, mocked_insert, mocked_find):
+        user_id = 'abcd'
+        tweet_id = ['', 'not']
+        mocked_find.return_value = {
+            "_id": "abcd",
+            "is_retweet": False,
+            "fav_list": [],
+            "user_id": 'mock_id',
+            "tweet_text": "mock"
+        }
+        mocked_insert.return_value = 'asa'
+        mocked_update.return_value = 'asa'
+        res1 = self.tweet_all.retweet(user_id, tweet_id[0])
+        res2 = self.tweet_all.retweet(user_id, tweet_id[1])
+        self.assertEqual(res1['code'], 400)
+        self.assertEqual(res2['code'], 200)
