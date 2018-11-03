@@ -24,7 +24,8 @@ class UserAuth:
             if auth_token == None:
                 raise TokenNotPresent
             cache_val = self.r_cache.get(auth_token)
-            if cache_val == 0:
+            print("cval", cache_val)
+            if cache_val == 0 or cache_val == None:
                 raise SessionExpired
             token_val = jwt.decode(auth_token, self.jwt_secret, algorithms=['HS256'])
             concat_id = token_val['user_dt']

@@ -40,12 +40,9 @@ class CannotFollowItself(Exception):
         Exception.__init__(self)
 
 
-class PasswordExpired(Exception):
-
-
-
-    def __init__(self, message):
-        Exception.__init__(self, message)
+class NotAuthorized(Exception):
+    def __init__(self):
+        Exception.__init__(self)
 
 
 class LockedAccount(Exception):
