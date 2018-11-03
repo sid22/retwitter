@@ -113,7 +113,7 @@ class TweetHandlerTests(unittest.TestCase):
         self.auth_res = auth_res
         self.tweet_all = TweetAll()
         # print("\n" + '\x1b[0;34;40m' + 'Starting API tests...' + '\x1b[0m')
-        print("\n Starting Tweet API tests...\n")
+        print("\n Starting Tweet Handler tests...\n")
 
     def setUp(self):
         pass
@@ -123,7 +123,7 @@ class TweetHandlerTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        print("Finished Tweet API tests...\n")
+        print("Finished Tweet Handler tests...\n")
 
     @patch('pymongo.collection.Collection.insert_one')
     def test_01_create(self, mocked_insert):
