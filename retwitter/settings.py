@@ -142,5 +142,7 @@ client = MongoClient(MONGO_URI)
 DB = client.postman
 # db.test.insert({"a":"b"})
 R_CACHE = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
+
+
 # R_CACHE.flushall()
 # r_cache.set('a','b')

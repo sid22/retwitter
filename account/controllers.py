@@ -6,6 +6,15 @@ from account.utils.custom_exceptions import *
 
 user_auth = UserAuth()
 
+def hello_page(request):
+    message = {
+        "Success": "This is the assignment I made for Postman Internship task",
+        "person": "Siddharth Goyal"
+    }
+    response = JsonResponse(message)
+    response.status_code = 200
+    return response
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username', '')
