@@ -9,7 +9,8 @@ from django.test import Client
 import unittest
 from django.urls import reverse
 from jwt import ExpiredSignatureError
-
+from account.utils.custom_exceptions import *
+from account.helpers.user_auth import UserAuth
 from unittest.mock import patch
 
 
@@ -18,7 +19,8 @@ class APITests(unittest.TestCase):
     Testing the controller functions only
     '''
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(self):
+        self.client = Client()
         # print("\n" + '\x1b[0;34;40m' + 'Starting API tests...' + '\x1b[0m')
         print("\n Starting API tests...\n")
 
@@ -29,87 +31,95 @@ class APITests(unittest.TestCase):
         pass
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(self):
         print("Finished API tests...\n")
 
-    def test_01_app_health(self):
+    def test_01_app_basepage(self):
         '''
         Tests the general response codes for routes, defined and notdefined
         '''
-        client = Client()
-        res1 = client.get('/')
+        res1 = self.client.get('/')
         self.assertEqual(res1.status_code, 200)
 
-    # @patch('appauth.handlers.handlers.UserAuth.login')
-    # def test_02_api_auth(self, mocked_login):
-    #     '''
-    #     Testing login controller, we mock the login function
-    #     '''
-    #     mocked_login.return_value = ({
-    #         'error': {
-    #             'status': 'Failure',
-    #             'message': 'User Not Found',
-    #             'code': -3
-    #             }
-    #         }, 400)
-    #     client = RequestsClient()
-    #     res1 = client.post('http://localhost:8000/user/auth/', data={
-    #         'username': 'thistestemailnotexist@innovaccer.com',
-    #         'password': 'test'
-    #     })
-    #     res2 = client.post('http://localhost:8000/user/auth/', data={
-    #         'username': '',
-    #         'password': ''
-    #     })
-    #     res3 = client.post('http://localhost:8000/user/auth/', data={
-    #     })
-    #     res4 = client.get("http://localhost:8000/user/auth/")
-    #     res5 = client.post('http://localhost:8000/user/auth/', data={
-    #         'username': '',
-    #         'password': '',
-    #         'type': 'ad'
-    #     })
-    #     res6 = client.post('http://localhost:8000/user/auth/', data={
-    #         'username': '',
-    #         'password': '',
-    #         'type': 'wrongtype'
-    #     })
-    #     self.assertEqual(res1.status_code, 400)
-    #     self.assertEqual(res2.status_code, 422)
-    #     self.assertEqual(res3.status_code, 404)
-    #     self.assertEqual(res4.status_code, 405)
-    #     self.assertEqual(res5.status_code, 422)
-    #     self.assertEqual(res6.status_code, 404)
+    def test_02_app_user_login(self):
+        '''
+        Test the login route
+        '''
+        res1 = self.client.get(reverse('login'))
+        res2 = self.client.post(reverse('login'))
+        self.assertEqual(res1.status_code, 405)
+        self.assertEqual(res2.status_code, 400)
 
-    # @patch('appauth.handlers.handlers.UserAuth.logout')
-    # def test_03_api_logout(self, mocked_logout):
-    #     mocked_logout.return_value = {
-    #         "message": "Success"
-    #     }
-    #     client = RequestsClient()
-    #     headers = {
-    #         'Authorization': "Authorization eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjoiMzE2YzI2NmMtNmM3NS00Zjc0LTkwNzAtZGY4YWJmMDNmNTE5IiwiaWF0IjoxNTI4NTc5NTIzLCJsb3V0IjpmYWxzZSwic3ViIjoie1widXNlcl9pZFwiOiBcInVzZXJfMVwiLCBcInJlbW90ZV9hZGRyZXNzXCI6IFwiMTI3LjAuMC4xXCIsIFwiZnVsbF9uYW1lXCI6IFwiSGVhbHRoQ2FyZSwgSW5ub3ZhY2NlciBEXCIsIFwiZW1haWxcIjogXCJjYXJlQGlubm92YWNjZXIuY29tXCJ9IiwiZXhwIjoxNTI4NjY1OTIzfQ.e2U5swaQIKYIwETLtgbkjFQt3p4w4SiBX7mHlfW_L8I"
-    #     }
-    #     response = client.post('http://localhost:8000/user/logout/', data={})
-    #     response2 = client.get('http://localhost:8000/user/logout/', data={})
-    #     response3 = client.get('http://localhost:8000/user/logout/', headers=headers)
-    #     self.assertEqual(response.status_code, 405)
-    #     self.assertEqual(response2.status_code, 400)
-    #     self.assertEqual(response3.status_code, 200)
+class HandlerTests(unittest.TestCase):
+    '''
+    Testing the controller functions only
+    '''
+    @classmethod
+    def setUpClass(self):
+        self.client = Client()
+        self.auser = UserAuth()
+        self.valid_sample_user = {"_id": "07d0bdae-0393-4a50-b575-d9245efcf8cf", "password": "7bf4fb3f97cd903a9af16ba419a1a3947ffa293371e2bcb1b868ee6e4baf3aec"}
+        self.invalid_sample_user = {"_id": "07d0b-d9245efcf8cf", "password": "7bf4fb3f99a1a3947ffa293371e2bcb1b868ee6e4baf3aec"}
+        
+        # print("\n" + '\x1b[0;34;40m' + 'Starting API tests...' + '\x1b[0m')
+        print("\n Starting Handler tests...\n")
 
-    # @patch('appauth.handlers.handlers.UserAuth.invalidate_adip')
-    # def test_04_api_setip(self, mocked_invalidate):
-    #     mocked_invalidate.return_value = ('teststring', 200)
-    #     client = RequestsClient()
-    #     response = client.get('http://localhost:8000/user/setip/')
-    #     response2 = client.post('http://localhost:8000/user/setip/', data={
-    #         "ip" : ""
-    #     })
-    #     response3 = client.post('http://localhost:8000/user/setip/', data={})
-    #     response4 = client.post('http://localhost:8000/user/setip/', data={
-    #         "ip" : "someip"
-    #     })
-    #     self.assertEqual(response.status_code, 405)
-    #     self.assertEqual(response2.status_code, 404)
-    #     self.assertEqual(response3.status_code, 404)
-    #     self.assertEqual(response4.status_code, 200)
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    @classmethod
+    def tearDownClass(self):
+        print("Finished Handler tests...\n")
+
+    @patch('pymongo.collection.Collection.count')
+    @patch('pymongo.collection.Collection.insert_one')
+    @patch('redis.StrictRedis.set')
+    def test_01_signup(self, redisset, mocked_insertone, mocked_count):
+        '''
+        Tests the general response codes for routes, defined and notdefined
+        '''
+        mocked_count.side_effect = [0, 1, 1, 1, 1]
+        username = ["siddharth", '', "siddharth", '']
+        password = ["siddharth", "siddharth", '', '']
+        res1 = self.auser.signup(username[0], password[0])
+        res2 = self.auser.signup(username[1], password[1])
+        res3 = self.auser.signup(username[2], password[2])
+        res4 = self.auser.signup(username[3], password[3])
+        res5 = self.auser.signup(username[0], password[0])
+        self.assertEqual(res1['code'], 200)
+        self.assertEqual(res2['code'], 400)
+        self.assertEqual(res3['code'], 400)
+        self.assertEqual(res4['code'], 400)
+        self.assertEqual(res5['code'], 409)
+    
+    @patch('pymongo.collection.Collection.find_one')
+    @patch('redis.StrictRedis.set')
+    def test_02_login(self, redisset, mocked_findone):
+        mocked_findone.side_effect = [self.valid_sample_user, None, None, None, None, self.invalid_sample_user]
+        username = ["siddharth", '', "siddharth", '']
+        password = ["siddharth", "siddharth", '', '']
+        res1 = self.auser.login(username[0], password[0])
+        res2 = self.auser.login(username[1], password[1])
+        res3 = self.auser.login(username[2], password[2])
+        res4 = self.auser.login(username[3], password[3])
+        res5 = self.auser.login(username[0], password[0])
+        res6 = self.auser.login(username[0], password[0])
+        self.assertEqual(res1['code'], 200)
+        self.assertEqual(res2['code'], 400)
+        self.assertEqual(res3['code'], 400)
+        self.assertEqual(res4['code'], 400)
+        self.assertEqual(res5['code'], 401)
+        self.assertEqual(res6['code'], 401)
+
+    # def test_02_app_user_login(self):
+    #     '''
+    #     Test the login route
+    #     '''
+    #     res1 = self.client.get(reverse('login'))
+    #     res2 = self.client.post(reverse('login'))
+    #     self.assertEqual(res1.status_code, 405)
+    #     self.assertEqual(res2.status_code, 400)
+        

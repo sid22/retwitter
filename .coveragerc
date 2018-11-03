@@ -1,0 +1,11 @@
+[run]
+omit =
+    #omit environments
+    */env/*
+    #omit inits
+    */__init__.py
+    #omit the coveage script
+    */getcoverage.py
+
+[html]
+directory = docs

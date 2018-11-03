@@ -101,7 +101,6 @@ class UserAuth:
             user_main = self.db.users.find_one(query_follower)
             if user_main['username'] == unfollow_name:
                 raise CannotFollowItself
-            
             init_fol = len(user_main['following'])
             user_main['following'].remove(unfollow_name)
 
@@ -133,14 +132,14 @@ class UserAuth:
     def signup(self, username, password):
         res = {}
         try:
-            if username == '':
+            if username == '' or username == None:
                 raise EmptyException('Username')
-            elif password == '':
+            elif password == '' or password == None:
                 raise EmptyException('Password')
-            elif username == '' or password == '':
+            elif username == '' or password == '' or username == None or password == None:
                 raise EmptyException('Username and Password')
-            duplicate = self.db.users.find_one({"username": username})
-            if duplicate != None:
+            duplicate = self.db.users.count({"username": username})
+            if duplicate != 0:
                 raise DuplicateUser
             ## we can add checks for username/password type/length here
 
@@ -154,7 +153,8 @@ class UserAuth:
                 "following": []
             }
             inserted = self.db.users.insert_one(to_insert)
-            u_hash = str(inserted.inserted_id).replace('-','')
+            # u_hash = str(inserted.inserted_id).replace('-','')
+            u_hash = to_insert["_id"].replace('-', '')
             payload = {
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30),
                 "user_dt": u_hash
@@ -178,17 +178,16 @@ class UserAuth:
     def login(self, username, password):
         res = {}
         try:
-            if username == '':
+            if username == '' or username == None:
                 raise EmptyException('Username')
-            elif password == '':
+            elif password == '' or password == None:
                 raise EmptyException('Password')
-            elif username == '' or password == '':
+            elif username == '' or password == '' or username == None or password == None:
                 raise EmptyException('Username and Password')
 
             user_find = self.db.users.find_one({"username": username})
             if user_find == None:
                 raise UserNotFound
-
             enc_password = hashlib.sha256(str(password).encode('utf-8')).hexdigest()
             if user_find['password'] != enc_password:
                 raise IncorrectPassword
@@ -203,6 +202,9 @@ class UserAuth:
             res['message'] = {"Success": "User authenticated succesfully!", "token": u_token}
             res['code'] = 200
 
+        except EmptyException as e:
+            res['message'] = {"Error": str(e.message + " cannot be empty")}
+            res['code'] = 400
         except UserNotFound:
             res['message'] = {"Error": "No user with provided username found"}
             res['code'] = 401
