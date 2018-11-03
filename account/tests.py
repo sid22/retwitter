@@ -121,7 +121,7 @@ class AccountHandlerTests(unittest.TestCase):
         self.valid_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDM3ODIyNDIsInVzZXJfZHQiOiIwN2QwYmRhZTAzOTM0YTUwYjU3NWQ5MjQ1ZWZjZjhjZiJ9.i2VQ6dGj2Ywh3x6TP3zpbFpckNfPzVfXWOYB_xqmrzc"
         self.valid_user_id = "07d0bdae-0393-4a50-b575-d9245efcf8cf"
         # print("\n" + '\x1b[0;34;40m' + 'Starting API tests...' + '\x1b[0m')
-        print("\n Starting Handler tests...\n")
+        print("\n Starting Account Handler tests...\n")
 
     def setUp(self):
         pass
@@ -131,7 +131,7 @@ class AccountHandlerTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        print("Finished Handler tests...\n")
+        print("Finished Account Handler tests...\n")
 
     @patch('pymongo.collection.Collection.count')
     @patch('pymongo.collection.Collection.insert_one')

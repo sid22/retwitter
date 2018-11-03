@@ -6,6 +6,11 @@ omit =
     */__init__.py
     #omit the coveage script
     */getcoverage.py
-
+    #omit django confs
+    */settings.py
+    */wsgi.py
+    */retwitter/*
+    */manage.py
+    */apps.py
 [html]
 directory = docs
