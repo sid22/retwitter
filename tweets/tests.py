@@ -124,7 +124,7 @@ class TweetAPITests(unittest.TestCase):
         self.assertEqual(res2.status_code, 200)
     
     @patch('account.helpers.user_auth.UserAuth.check_auth')
-    @patch('tweets.helpers.tweet_logic.TweetAll.thread')
+    @patch('tweets.helpers.tweet_logic.TweetAll.thread_view')
     def test_06_view_thread(self, mock_thread, mock_auth):
         '''
         Test the thread route
