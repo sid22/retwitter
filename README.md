@@ -8,6 +8,9 @@ Postman Service Internship Assignment
 
 Re Twitter Assignment - complete with all basic, extended and extra credit functionalities.
 
+Postman Collection of all the endpoints with valid request/responses 
+[https://documenter.getpostman.com/view/3851689/RzZ6HL3A](https://documenter.getpostman.com/view/3851689/RzZ6HL3A)
+
 ## Table of contents
 - [Installation](#installation)
     - [Setup instructions](#setup-instructions)
