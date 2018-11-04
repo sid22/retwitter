@@ -74,7 +74,7 @@ class UserAuth:
             if followed.modified_count != 1:
                 raise UserNotFound
             follower = self.db.users.update_one(query_follower, update_follower, upsert=False)
-            res['message'] = {"Success": user_main['username'] + " has succesfully unfollowed " + follow_name}
+            res['message'] = {"Success": user_main['username'] + " has succesfully followed " + follow_name}
             res['code'] = 200   
 
         except UserNotFound:
@@ -100,16 +100,16 @@ class UserAuth:
             user_main = self.db.users.find_one(query_follower)
             if user_main['username'] == unfollow_name:
                 raise CannotFollowItself
-            init_fol = len(user_main['following'])
-            user_main['following'].remove(unfollow_name)
 
             update_follower = { "$pull": { "following": { "$in": [ unfollow_name ] } }} 
             query_followed = { "username": unfollow_name }
             update_followed = { "$pull": { "followers": { "$in": [ user_main['username'] ] } }} 
-         
+
             followed = self.db.users.update_one(query_followed, update_followed, upsert=False)
-            if followed.modified_count != 1:
+            if followed.matched_count != 1:
                 raise UserNotFound
+                if followed.modified_count == 0:
+                    raise ValueError
             follower = self.db.users.update_one(query_follower, update_follower, upsert=False)
             res['message'] = {"Success": user_main['username'] + " has succesfully unfollowed " + unfollow_name}
             res['code'] = 200   

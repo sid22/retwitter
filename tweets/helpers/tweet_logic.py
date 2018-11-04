@@ -50,7 +50,7 @@ class TweetAll:
                 raise EmptyException("tweet id")
             
             to_delete_tweet = self.db.tweets.find_one({"_id": tweet_id})
-            if to_delete_tweet['_id'] != user_id:
+            if to_delete_tweet['user_id'] != user_id:
                 raise NotAuthorized
             if to_delete_tweet["is_retweet"] == True:
                 ## we need to change the original also
@@ -252,7 +252,7 @@ class TweetAll:
                     }
                     new_tweets.append(new_tweet)
             inserted_tweets = self.db.tweets.insert_many(new_tweets)
-            res['message'] = {"Success": "Tweet created succesfully!", "thread_id": thread_id, "tweet_ids": [inserted_tweets.inserted_ids] }
+            res['message'] = {"Success": "Thread created succesfully!", "thread_id": thread_id, "tweet_ids": [inserted_tweets.inserted_ids] }
             res['code'] = 200
         except EmptyException as e: 
             res['message'] = {"Error": str(e.message + " cannot be empty")}
@@ -268,7 +268,7 @@ class TweetAll:
             if thread_id == '':
                 raise EmptyException("Thread id")
             thread_tweets = list(self.db.tweets.find({"thread_id": thread_id}))
-            res['message'] = {"Success": "Tweet created succesfully!", "thread_id": thread_id, "thread_tweets": [thread_tweets] }
+            res['message'] = {"Success": "Thread fetched succesfully!", "thread_id": thread_id, "thread_tweets": [thread_tweets] }
             res['code'] = 200
         except EmptyException as e: 
             res['message'] = {"Error": str(e.message + " cannot be empty")}
