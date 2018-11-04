@@ -250,3 +250,19 @@ class TweetAll:
             res['message'] = {"Error": "Some intenal error occured try again"}
             res['code'] = 500
         return res
+
+    def thread_view(self, thread_id):
+        res = {}
+        try:
+            if thread_id == '':
+                raise EmptyException("Thread id")
+            thread_tweets = list(self.db.tweets.find({"thread_id": thread_id}))
+            res['message'] = {"Success": "Tweet created succesfully!", "thread_id": thread_id, "thread_tweets": [thread_tweets] }
+            res['code'] = 200
+        except EmptyException as e: 
+            res['message'] = {"Error": str(e.message + " cannot be empty")}
+            res['code'] = 400
+        except Exception as e:
+            res['message'] = {"Error": "Some intenal error occured try again"}
+            res['code'] = 500
+        return res

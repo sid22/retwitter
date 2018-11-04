@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import calendar
+import unittest
 # import unittest
-from datetime import datetime
+from unittest.mock import patch
 
 from django.test import Client
-import unittest
 from django.urls import reverse
-from jwt import ExpiredSignatureError
+
 from account.helpers.user_auth import UserAuth
 from tweets.helpers.tweet_logic import TweetAll
-from unittest.mock import patch
+
 from .test_helpers import InsertResult
+
+
 # Create your tests here.
 class TweetAPITests(unittest.TestCase):
     '''
@@ -249,7 +250,7 @@ class TweetHandlerTests(unittest.TestCase):
         self.assertEqual(res2['code'], 200)
 
     @patch('pymongo.collection.Collection.insert_many')
-    def test_06_thread(self, mocked_insert):
+    def test_07_thread(self, mocked_insert):
         user_id = 'abcd'
         tweet_id = ['', 'not']
         ins = InsertResult()

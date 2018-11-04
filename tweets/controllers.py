@@ -87,7 +87,7 @@ def handle_reply(request, tweet_id):
     response.status_code = res['code']
     return response
 
-def thread_tweet(request):
+def thread_tweet(request, thread_id=''):
     if request.method == 'POST':
         auth_token = request.META.get('HTTP_AUTHORIZATION')
         res = user_auth.check_auth(auth_token)
@@ -101,10 +101,10 @@ def thread_tweet(request):
                 i = i + 1
             res = tweet.thread(res['user_id'], thread_texts)    
     elif request.method == 'GET':
-        res = {}
-        res['message'] = {"Error": "Create tweet resource is for POST request only"}
-        res['code'] = 405
-
+        auth_token = request.META.get('HTTP_AUTHORIZATION')
+        res = user_auth.check_auth(auth_token)
+        if res['code'] == 200:
+            res = tweet.thread_view(thread_id)    
     response = JsonResponse(res['message'])
     response.status_code = res['code']
     return response
