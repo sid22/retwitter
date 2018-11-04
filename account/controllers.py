@@ -44,7 +44,7 @@ def user_signup(request):
     return response
 
 def user_logout(request):
-    auth_token = request.META.get('HTTP_AUTHORIZATION')
+    auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.logout(auth_token)
     response = JsonResponse(res['message'])
     response.status_code = res['code']
@@ -52,7 +52,7 @@ def user_logout(request):
 
 def user_follow(request):
     if request.method == 'POST':
-        auth_token = request.META.get('HTTP_AUTHORIZATION')
+        auth_token = request.META.get('HTTP_AUTHORIZATION', '')
         res = user_auth.check_auth(auth_token) 
         if res['code'] == 200:
             follow_name = request.POST.get('follow_name', '')
@@ -69,7 +69,7 @@ def user_follow(request):
 
 def user_unfollow(request):
     if request.method == 'POST':
-        auth_token = request.META.get('HTTP_AUTHORIZATION')
+        auth_token = request.META.get('HTTP_AUTHORIZATION', '')
         res = user_auth.check_auth(auth_token) 
         if res['code'] == 200:
             unfollow_name = request.POST.get('unfollow_name', '')

@@ -16,7 +16,7 @@ class TweetAll:
             new_tweet = {
                 "_id": str(uuid.uuid4()),
                 "user_id": user_id,
-                "tweet_text": tweet_text,
+                "tweet_text": tweet_text[:140],
                 "created_at": datetime.datetime.utcnow(),
                 "fav_count": 0,
                 "fav_list": [],
@@ -26,6 +26,7 @@ class TweetAll:
                 "is_retweet": False,
                 "before_retweet_user": None,
                 "before_tweet_id": None,
+                "is_reply": False,
                 "replies": [],
                 "replies_count": 0,
                 "is_threaded": False,
@@ -59,6 +60,13 @@ class TweetAll:
                                     "$pull": { "retweet_user_list": { "$in": [ user_id ] } }}
                 tweet_ori_update = self.db.tweets.update_one(original_query, original_update)
                 deleted_tweet = self.db.tweets.delete_one({"_id": tweet_id})    
+            elif to_delete_tweet["is_reply"] == True:
+                ## we need to change the original also
+                original_query = {"_id": to_delete_tweet["before_tweet_id"]}
+                original_update = { "$pull": { "replies": { "$in": [ tweet_id ] } }, 
+                                    "$inc": { "replies_count": -1 } }
+                tweet_ori_update = self.db.tweets.update_one(original_query, original_update)
+                deleted_tweet = self.db.tweets.delete_one({"_id": tweet_id})
             else:    
                 deleted_tweet = self.db.tweets.delete_one({"_id": tweet_id})
             res['message'] = {"Success": "Tweet deleted succesfully!", "tweet_id": tweet_id}
@@ -141,6 +149,7 @@ class TweetAll:
                 "is_retweet": True,
                 "before_retweet_user": original_tweet['user_id'],
                 "before_tweet_id": original_tweet["_id"],
+                "is_reply": False,
                 "replies": [],
                 "is_threaded": False,
                 "thread_id": None,
@@ -175,7 +184,7 @@ class TweetAll:
             reply_obj = {
                 "_id": str(uuid.uuid4()),
                 "user_id": user_id,
-                "tweet_text": reply_text,
+                "tweet_text": reply_text[:140],
                 "created_at": datetime.datetime.utcnow(),
                 "fav_count": 0,
                 "fav_list": [],
@@ -184,7 +193,8 @@ class TweetAll:
                 "retweet_user_list": [],
                 "is_retweet": False,
                 "before_retweet_user": None,
-                "before_tweet_id": None,
+                "before_tweet_id": original_tweet["_id"],
+                "is_reply": True,
                 "replies": [],
                 "replies_count": 0,
                 "is_threaded": False,
@@ -224,7 +234,7 @@ class TweetAll:
                     new_tweet = {
                         "_id": str(uuid.uuid4()),
                         "user_id": user_id,
-                        "tweet_text": single_tweet,
+                        "tweet_text": single_tweet[:140],
                         "created_at": thread_time,
                         "fav_count": 0,
                         "fav_list": [],
@@ -234,6 +244,7 @@ class TweetAll:
                         "is_retweet": False,
                         "before_retweet_user": None,
                         "before_tweet_id": None,
+                        "is_reply": False,
                         "replies": [],
                         "replies_count": 0,
                         "is_threaded": True,

@@ -7,7 +7,7 @@ tweet = TweetAll()
 
 def create_tweet(request):
     if request.method == 'POST':
-        auth_token = request.META.get('HTTP_AUTHORIZATION')
+        auth_token = request.META.get('HTTP_AUTHORIZATION', '')
         res = user_auth.check_auth(auth_token)
         if res['code'] == 200:
             tweet_text = request.POST.get('tweet_text', '')
@@ -22,7 +22,7 @@ def create_tweet(request):
     return response
 
 def handle_tweet(request, tweet_id):
-    auth_token = request.META.get('HTTP_AUTHORIZATION')
+    auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.check_auth(auth_token)    
     if res['code'] == 200:
         if request.method == 'DELETE':
@@ -45,7 +45,7 @@ def handle_tweet(request, tweet_id):
     return response
 
 def handle_emotion(request, tweet_id):
-    auth_token = request.META.get('HTTP_AUTHORIZATION')
+    auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.check_auth(auth_token)    
     if res['code'] == 200:
         if request.method == 'POST':
@@ -59,7 +59,7 @@ def handle_emotion(request, tweet_id):
     return response
 
 def handle_retweet(request, tweet_id):
-    auth_token = request.META.get('HTTP_AUTHORIZATION')
+    auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.check_auth(auth_token)    
     if res['code'] == 200:
         if request.method == 'POST':
@@ -73,7 +73,7 @@ def handle_retweet(request, tweet_id):
     return response
 
 def handle_reply(request, tweet_id):
-    auth_token = request.META.get('HTTP_AUTHORIZATION')
+    auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.check_auth(auth_token)    
     if res['code'] == 200:
         if request.method == 'POST':
@@ -89,7 +89,7 @@ def handle_reply(request, tweet_id):
 
 def thread_tweet(request, thread_id=''):
     if request.method == 'POST':
-        auth_token = request.META.get('HTTP_AUTHORIZATION')
+        auth_token = request.META.get('HTTP_AUTHORIZATION', '')
         res = user_auth.check_auth(auth_token)
         if res['code'] == 200:
             thread_count = request.POST.get('thread_count', 0)
