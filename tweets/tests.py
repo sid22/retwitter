@@ -273,10 +273,9 @@ class TweetHandlerTests(unittest.TestCase):
         self.assertEqual(res2['code'], 200)
 
     @patch('pymongo.collection.Collection.find')
-    def test_07_thread(self, mocked_find):
-        user_id = 'abcd'
+    def test_08_thread_view(self, mocked_find):
         thread_id = ['', 'not']
-        mocked_find.return_value = []
+        mocked_find.return_value = {}
         res1 = self.tweet_all.thread_view(thread_id[0])
         res2 = self.tweet_all.thread_view(thread_id[1])
         self.assertEqual(res1['code'], 400)

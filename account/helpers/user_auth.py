@@ -160,7 +160,6 @@ class UserAuth:
             }
             u_token = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
             self.r_cache.set(u_token, (datetime.datetime.utcnow() + datetime.timedelta(days=30)), ex=int(datetime.timedelta(days=30).total_seconds()))
-            # self.r_cache.expire(u_token, key_expire)
             print("canot red")
             res['message'] = {"Success": "User added succesfully!", "token": u_token}
             res['code'] = 200
