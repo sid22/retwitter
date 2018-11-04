@@ -120,8 +120,19 @@ class TweetAPITests(unittest.TestCase):
         mock_auth.return_value = self.auth_res
         res1 = self.client.get(reverse('thread'))
         res2 = self.client.post(reverse('thread'))
-        self.assertEqual(res1.status_code, 405)
+        self.assertEqual(res1.status_code, 400)
         self.assertEqual(res2.status_code, 200)
+    
+    @patch('account.helpers.user_auth.UserAuth.check_auth')
+    @patch('tweets.helpers.tweet_logic.TweetAll.thread')
+    def test_06_view_thread(self, mock_thread, mock_auth):
+        '''
+        Test the thread route
+        '''
+        mock_thread.return_value = self.res
+        mock_auth.return_value = self.auth_res
+        res1 = self.client.get(reverse('view_thread', kwargs={"thread_id":"asdas"}))
+        self.assertEqual(res1.status_code, 200)
 
 class TweetHandlerTests(unittest.TestCase):
     '''
@@ -258,5 +269,15 @@ class TweetHandlerTests(unittest.TestCase):
         thread_texts = [[], ["thread"]]
         res1 = self.tweet_all.thread(user_id, thread_texts[0])
         res2 = self.tweet_all.thread(user_id, thread_texts[1])
+        self.assertEqual(res1['code'], 400)
+        self.assertEqual(res2['code'], 200)
+
+    @patch('pymongo.collection.Collection.find')
+    def test_07_thread(self, mocked_find):
+        user_id = 'abcd'
+        thread_id = ['', 'not']
+        mocked_find.return_value = []
+        res1 = self.tweet_all.thread_view(thread_id[0])
+        res2 = self.tweet_all.thread_view(thread_id[1])
         self.assertEqual(res1['code'], 400)
         self.assertEqual(res2['code'], 200)

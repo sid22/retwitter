@@ -69,7 +69,7 @@ class UserAuth:
             update_follower = { "$push": { "following": { "$each": [ follow_name ] } }} 
             query_followed = { "username": follow_name }
             update_followed = { "$push": { "followers": { "$each": [ user_main['username'] ] } }} 
-         
+
             followed = self.db.users.update_one(query_followed, update_followed, upsert=False)
             if followed.modified_count != 1:
                 raise UserNotFound
@@ -154,12 +154,15 @@ class UserAuth:
             inserted = self.db.users.insert_one(to_insert)
             # u_hash = str(inserted.inserted_id).replace('-','')
             u_hash = to_insert["_id"].replace('-', '')
+            key_time = datetime.datetime.utcnow()
+            key_expire = key_time + datetime.timedelta(days=30)
             payload = {
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30),
-                "user_dt": u_hash
+                "exp": key_expire,
+                "user_dt": str(u_hash)
             }
             u_token = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
-            self.r_cache.set(u_token, datetime.datetime.utcnow())
+            self.r_cache.set(u_token, key_time)
+            self.r_cache.expire(u_token, key_expire)
             res['message'] = {"Success": "User added succesfully!", "token": u_token}
             res['code'] = 200
 
@@ -192,12 +195,15 @@ class UserAuth:
                 raise IncorrectPassword
             
             u_hash = user_find["_id"].replace('-', '')
+            key_time = datetime.datetime.utcnow()
+            key_expire = key_time + datetime.timedelta(days=30)
             payload = {
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30),
+                "exp": key_expire,
                 "user_dt": str(u_hash)
             }
             u_token = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
-            self.r_cache.set(u_token, datetime.datetime.utcnow())
+            self.r_cache.set(u_token, key_time)
+            self.r_cache.expire(u_token, key_expire)
             res['message'] = {"Success": "User authenticated succesfully!", "token": u_token}
             res['code'] = 200
 

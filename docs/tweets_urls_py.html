@@ -79,6 +79,7 @@
 <p id="n10" class="pln"><a href="#n10">10</a></p>
 <p id="n11" class="pln"><a href="#n11">11</a></p>
 <p id="n12" class="pln"><a href="#n12">12</a></p>
+<p id="n13" class="pln"><a href="#n13">13</a></p>
 
             </td>
             <td class="text">
@@ -89,11 +90,12 @@
 <p id="t5" class="pln">    <span class="com"># path('&lt;str:tweet_id'),</span><span class="strut">&nbsp;</span></p>
 <p id="t6" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'create'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">create_tweet</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'create'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t7" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'thread/'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">thread_tweet</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'thread'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t8" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'&lt;str:tweet_id>'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">handle_tweet</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'handle'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t9" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'emotion/&lt;str:tweet_id>'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">handle_emotion</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'emotion'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t10" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'retweet/&lt;str:tweet_id>'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">handle_retweet</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'retweet'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t11" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'reply/&lt;str:tweet_id>'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">handle_reply</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'reply'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t12" class="pln"><span class="op">]</span><span class="strut">&nbsp;</span></p>
+<p id="t8" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'thread/&lt;str:thread_id>'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">thread_tweet</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'view_thread'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t9" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'&lt;str:tweet_id>'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">handle_tweet</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'handle'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t10" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'emotion/&lt;str:tweet_id>'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">handle_emotion</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'emotion'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t11" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'retweet/&lt;str:tweet_id>'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">handle_retweet</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'retweet'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t12" class="pln">    <span class="nam">path</span><span class="op">(</span><span class="str">'reply/&lt;str:tweet_id>'</span><span class="op">,</span> <span class="nam">controllers</span><span class="op">.</span><span class="nam">handle_reply</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'reply'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t13" class="pln"><span class="op">]</span><span class="strut">&nbsp;</span></p>
 
             </td>
         </tr>
@@ -104,7 +106,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.5.1</a>,
-            created at 2018-11-04 02:56
+            created at 2018-11-04 12:26
         </p>
     </div>
 </div>

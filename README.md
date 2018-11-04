@@ -54,6 +54,8 @@ To run the project locally, firstly the user must either:
 ### Signup
 User registeration with unique username and password.
 
+No bounds on username or password. Response has a token, which is then used further on to authenticate/authorize the user.
+
 Route: ```http://127.0.0.1:8000/user/signup```
 
 Method: POST
