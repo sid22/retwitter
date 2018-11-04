@@ -34,7 +34,7 @@ The whole APP hosted on Google Cloud
     - [Retweet](#retweet)
     - [Replies](#replies) and [threading](#threads)
 
-The project is a set of APIs made with the Django Framework in Python language. MongoDB database is used for storing information, MLab is used to provide Database-as-a-Service on hostel project. Redis in-memory data structure store is used as a cache store for session management, RedisLabs is used to provide it on hostel project. 
+The project is a set of APIs made with the Django Framework in Python language. MongoDB database is used for storing information, MLab is used to provide Database-as-a-Service on hosted project. Redis in-memory data structure store is used as a cache store for session management, RedisLabs is used to provide it on hostel project. 
 
 
 ----
@@ -65,7 +65,7 @@ To run the project locally, firstly the user must either:
 [(Back to top)](#table-of-contents)
 
 ### Signup
-User registeration with unique username and password.
+User registration with unique username and password.
 
 No bounds on username or password. Response has a token, which is then used further on to authenticate/authorize the user.
 
@@ -106,7 +106,7 @@ If empty token, no header the following error response will come, status code 40
 ```
 
 ### Follow
-The user idenitified in the token follows the user passed.
+The user identified in the token follows the user passed.
 
 Route: ```user/follow```
 
@@ -121,7 +121,7 @@ Method:/POST
 Will throw error on empty username, if the username is already being followed.
 
 ### Unfollow
-The user idenitified in the token unfollows the user passed
+The user identified in the token unfollows the user passed
 
 Route: ```user/unfollow```
 
@@ -136,7 +136,7 @@ Method:/POST
 Will throw error on empty username, if the username is already being not followed.
 
 ### Create
-The user idenitified in the token creates a tweet with the text passed
+The user identified in the token creates a tweet with the text passed
 
 Route: ```tweet/create```
 
@@ -153,7 +153,7 @@ The text will be capped at 140 characters ( including spaces ), same for replies
 Will throw error on empty tweet_text also.
 
 ### Read Delete
-The user idenitified in the token is used to check authorization for delete.
+The user identified in the token is used to check authorization for delete.
 
 Route: ```tweet/{{tweet_id}}```
 
@@ -170,7 +170,7 @@ Will throw error if user not authorized.
 
 ## Tests
 
-I have used primarily python's unittest module and Django's Test Client to test the handler funtions and endpoints respectively. 
+I have used primarily python's unittest module and Django's Test Client to test the handler functions and endpoints respectively. 
 
 The coverage reports for the same have also been generated and are present in the /docs folder in the main repo.
 
@@ -188,12 +188,12 @@ To run all tests locally
 python manage.py test --verbosity 3
 ```
 
-To run tests for account componenet only
+To run tests for account component only
 ```
 python manage.py test account/ --verbosity 3
 ```
 
-To run tests for tweet componenet only
+To run tests for tweet component only
 ```
 python manage.py test tweets/ --verbosity 3
 ```
@@ -211,7 +211,7 @@ python getcoverage.py
 [(Back to top)](#table-of-contents)
 
 ### Like Unlike
-The user idenitified in the token 'likes' the tweet whose id is passed. If the user has previously liked the same tweet, he will 'unlike' it. Hitting the endpoint again will again make the user 'like' the tweet.
+The user identified in the token 'likes' the tweet whose id is passed. If the user has previously liked the same tweet, he will 'unlike' it. Hitting the endpoint again will again make the user 'like' the tweet.
 
 Route: ```tweet/emotion/{{tweet_id}}```
 
@@ -221,7 +221,7 @@ Method:/POST
 
 
 ### Retweet
-The user idenitified in the token 'retweets' the tweet whose id is passed. A retweet will have similar model as a tweet, but will also have certain flags like 
+The user identified in the token 'retweets' the tweet whose id is passed. A retweet will have similar model as a tweet, but will also have certain flags like 
 ```
 is_retweet: True
 ```
@@ -238,7 +238,7 @@ Method:/POST™
 
 
 ### Replies
-The user idenitified in the token 'replies' to the tweet whose id is passed. A reply will be treated similar to a tweet object. It will the following flag.
+The user identified in the token 'replies' to the tweet whose id is passed. A reply will be treated similar to a tweet object. It will the following flag.
 ```
 is_reply: True
 ```
@@ -259,7 +259,7 @@ Method:/POST
 
 
 ### Threads
-The user idenitified in the token creates a thread of tweets. The tweets is a thread will have
+The user identified in the token creates a thread of tweets. The tweets is a thread will have
 ```
 "is_threaded": True
 ```
