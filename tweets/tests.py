@@ -60,7 +60,7 @@ class TweetAPITests(unittest.TestCase):
     @patch('tweets.helpers.tweet_logic.TweetAll.make_emotion')
     def test_02_emotion_tweet(self, mock_emotion, mock_auth):
         '''
-        Test the login route
+        Test the emotion route
         '''
         mock_emotion.return_value = self.res
         mock_auth.return_value = self.auth_res
@@ -73,7 +73,7 @@ class TweetAPITests(unittest.TestCase):
     @patch('tweets.helpers.tweet_logic.TweetAll.retweet')
     def test_03_retweet_tweet(self, mock_retweet, mock_auth):
         '''
-        Test the login route
+        Test the retweet route
         '''
         mock_retweet.return_value = self.res
         mock_auth.return_value = self.auth_res

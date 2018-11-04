@@ -8,6 +8,8 @@ Postman Service Internship Assignment
 
 Re Twitter Assignment - complete with all basic, extended and extra credit functionalities.
 
+## Important Links:
+
 Postman Collection of all the endpoints with valid request/responses 
 
 [https://documenter.getpostman.com/view/3851689/RzZ6HL3A](https://documenter.getpostman.com/view/3851689/RzZ6HL3A)
@@ -15,6 +17,10 @@ Postman Collection of all the endpoints with valid request/responses
 The whole APP hosted on Google Cloud
 
 [https://postman-221411.appspot.com](https://postman-221411.appspot.com)
+
+The coverage report on Google Cloud:
+[https://postman-221411.appspot.com/reports/index.html](https://postman-221411.appspot.com/reports/index.html)
+
 
 ## Table of contents
 - [Installation](#installation)

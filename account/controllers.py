@@ -6,6 +6,10 @@ user_auth = UserAuth()
 
 
 def hello_page(request):
+    '''
+    Param: request
+    Controller to hello world
+    '''
     message = {
         "Success": "This is the assignment I made for Postman Internship task",
         "person": "Siddharth Goyal"
@@ -16,6 +20,10 @@ def hello_page(request):
 
 
 def user_login(request):
+    '''
+    Param: request
+    Controller to handle login only POST request.
+    '''
     if request.method == 'POST':
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
@@ -31,6 +39,10 @@ def user_login(request):
 
 
 def user_signup(request):
+    '''
+    Param: request
+    Controller to handle signup, only POST request.
+    '''
     if request.method == 'POST':
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
@@ -46,6 +58,10 @@ def user_signup(request):
 
 
 def user_logout(request):
+    '''
+    Param: request
+    Controller to handle login only POST/GET request.
+    '''
     auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.logout(auth_token)
     response = JsonResponse(res['message'])
@@ -54,6 +70,10 @@ def user_logout(request):
 
 
 def user_follow(request):
+    '''
+    Param: request
+    Controller to handle follow, only POST request.
+    '''
     if request.method == 'POST':
         auth_token = request.META.get('HTTP_AUTHORIZATION', '')
         res = user_auth.check_auth(auth_token)
@@ -72,6 +92,10 @@ def user_follow(request):
 
 
 def user_unfollow(request):
+    '''
+    Param: request
+    Controller to handle unfollow, only POST request.
+    '''
     if request.method == 'POST':
         auth_token = request.META.get('HTTP_AUTHORIZATION', '')
         res = user_auth.check_auth(auth_token)

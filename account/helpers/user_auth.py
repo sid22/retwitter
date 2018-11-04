@@ -13,12 +13,23 @@ from account.utils.custom_exceptions import (AlreadyFollowingUser,
 
 
 class UserAuth:
+    '''
+    User auth class to have all the functions to be called by controllers.
+    Supports are user functionalities.
+    '''
     def __init__(self):
+        '''
+        PyMongo Db instance and Redis instance are made as class variable.
+        '''
         self.db = settings.DB
         self.r_cache = settings.R_CACHE
         self.jwt_secret = settings.JWT_SECRET
 
     def check_auth(self, auth_token):
+        '''
+        Params: auth_token
+        Validates the auth token and extracts user info from it. Verfies it against cache and gives response.
+        '''
         res = {}
         try:
             if auth_token == None:
@@ -54,6 +65,10 @@ class UserAuth:
         return res  
 
     def follow(self, user_id, follow_name):
+        '''
+        Params: user_id, follow_name
+        Allows user with _id user_id to follow user with username follow_name
+        '''
         res = {}
         try:
             query_follower = {"_id": user_id}
@@ -92,6 +107,10 @@ class UserAuth:
         return res
 
     def unfollow(self, user_id, unfollow_name):
+        '''
+        Params: user_id, follow_name
+        Allows user with _id user_id to unfollow user with username follow_name
+        '''
         res = {}
         try:
             query_follower = {"_id": user_id}
@@ -129,6 +148,10 @@ class UserAuth:
         return res
 
     def signup(self, username, password):
+        '''
+        Params: username, password
+        Creates new user 
+        '''
         res = {}
         try:
             if username == '' or username == None:
@@ -175,6 +198,10 @@ class UserAuth:
         return res
 
     def login(self, username, password):
+        '''
+        Params: username, password
+        Logs in existing user ( generates token ) 
+        '''
         res = {}
         try:
             if username == '' or username == None:
@@ -216,6 +243,10 @@ class UserAuth:
         return res
 
     def logout(self, auth_token):
+        '''
+        Params: auth_token
+        Maintains invalidity of token until expiry ( session )
+        '''
         res = {}
         try:
             if auth_token == None:

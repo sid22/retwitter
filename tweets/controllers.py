@@ -7,6 +7,10 @@ tweet = TweetAll()
 
 
 def create_tweet(request):
+    '''
+    Param: request
+    Controller to handle create tweet, only POST request.
+    '''
     if request.method == 'POST':
         auth_token = request.META.get('HTTP_AUTHORIZATION', '')
         res = user_auth.check_auth(auth_token)
@@ -24,6 +28,11 @@ def create_tweet(request):
 
 
 def handle_tweet(request, tweet_id):
+    '''
+    Param: request, tweet_id
+    Controller to handle tweet, view and delete.
+    View tweet by get method and delete by delete method
+    '''
     auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.check_auth(auth_token)
     if res['code'] == 200:
@@ -48,6 +57,11 @@ def handle_tweet(request, tweet_id):
 
 
 def handle_emotion(request, tweet_id):
+    '''
+    Param: request, tweet_id
+    Controller to handle emotion(like/unlike).
+    Only post method
+    '''
     auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.check_auth(auth_token)
     if res['code'] == 200:
@@ -63,6 +77,12 @@ def handle_emotion(request, tweet_id):
 
 
 def handle_retweet(request, tweet_id):
+    '''
+    Param: request, tweet_id
+    Controller to make retweet
+    Only POST method
+    '''
+
     auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.check_auth(auth_token)
     if res['code'] == 200:
@@ -78,6 +98,11 @@ def handle_retweet(request, tweet_id):
 
 
 def handle_reply(request, tweet_id):
+    '''
+    Param: request, tweet_id
+    Controller to make replies.
+    Only POST method
+    '''
     auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.check_auth(auth_token)
     if res['code'] == 200:
@@ -94,6 +119,12 @@ def handle_reply(request, tweet_id):
 
 
 def thread_tweet(request, thread_id=''):
+    '''
+    Param: request, tweet_id
+    Controller to create and view thread.
+    POST request to create
+    GET request to view thread
+    '''
     if request.method == 'POST':
         auth_token = request.META.get('HTTP_AUTHORIZATION', '')
         res = user_auth.check_auth(auth_token)
