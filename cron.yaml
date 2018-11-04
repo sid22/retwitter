@@ -1,4 +1,0 @@
-cron:
-- description: "keeping app active always"
-  url: /
-  schedule: every 5 minutes

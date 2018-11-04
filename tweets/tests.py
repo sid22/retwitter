@@ -122,7 +122,7 @@ class TweetAPITests(unittest.TestCase):
         res2 = self.client.post(reverse('thread'))
         self.assertEqual(res1.status_code, 400)
         self.assertEqual(res2.status_code, 200)
-    
+
     @patch('account.helpers.user_auth.UserAuth.check_auth')
     @patch('tweets.helpers.tweet_logic.TweetAll.thread_view')
     def test_06_view_thread(self, mock_thread, mock_auth):
@@ -181,14 +181,16 @@ class TweetHandlerTests(unittest.TestCase):
         tweet_id = ['', 'not']
         mocked_find.return_value = {
             "_id": "abcd",
-            "is_retweet": False
+            "user_id": "abcd",
+            "is_retweet": False,
+            "is_reply": False
         }
         mocked_delete.return_value = 'asa'
         res1 = self.tweet_all.delete(user_id, tweet_id[0])
         res2 = self.tweet_all.delete(user_id, tweet_id[1])
         self.assertEqual(res1['code'], 400)
         self.assertEqual(res2['code'], 200)
-    
+
     @patch('pymongo.collection.Collection.find_one')
     @patch('pymongo.collection.Collection.delete_one')
     def test_03_view(self, mocked_delete, mocked_find):
@@ -199,8 +201,8 @@ class TweetHandlerTests(unittest.TestCase):
             "is_retweet": False
         }
         mocked_delete.return_value = 'asa'
-        res1 = self.tweet_all.view(user_id, tweet_id[0])
-        res2 = self.tweet_all.view(user_id, tweet_id[1])
+        res1 = self.tweet_all.view(tweet_id[0])
+        res2 = self.tweet_all.view(tweet_id[1])
         self.assertEqual(res1['code'], 400)
         self.assertEqual(res2['code'], 200)
 

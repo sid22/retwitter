@@ -108,8 +108,8 @@ class UserAuth:
             followed = self.db.users.update_one(query_followed, update_followed, upsert=False)
             if followed.matched_count != 1:
                 raise UserNotFound
-                if followed.modified_count == 0:
-                    raise ValueError
+            elif followed.modified_count == 0:
+                raise ValueError
             follower = self.db.users.update_one(query_follower, update_follower, upsert=False)
             res['message'] = {"Success": user_main['username'] + " has succesfully unfollowed " + unfollow_name}
             res['code'] = 200   
@@ -160,7 +160,6 @@ class UserAuth:
             }
             u_token = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
             self.r_cache.set(u_token, (datetime.datetime.utcnow() + datetime.timedelta(days=30)), ex=int(datetime.timedelta(days=30).total_seconds()))
-            print("canot red")
             res['message'] = {"Success": "User added succesfully!", "token": u_token}
             res['code'] = 200
 

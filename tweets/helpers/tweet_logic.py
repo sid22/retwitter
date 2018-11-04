@@ -1,6 +1,11 @@
+import datetime
+import uuid
+
 from django.conf import settings
-import datetime, uuid
-from account.utils.custom_exceptions import EmptyException, NotAuthorized, TweetNotFound
+
+from account.utils.custom_exceptions import (EmptyException, NotAuthorized,
+                                             TweetNotFound)
+
 
 class TweetAll:
     def __init__(self):
@@ -12,7 +17,7 @@ class TweetAll:
         res = {}
         try:
             if tweet_text == '':
-                raise EmptyException("Tweet text")
+                raise EmptyException("Tweet tex=t")
             new_tweet = {
                 "_id": str(uuid.uuid4()),
                 "user_id": user_id,
@@ -53,9 +58,9 @@ class TweetAll:
             if to_delete_tweet['user_id'] != user_id:
                 raise NotAuthorized
             if to_delete_tweet["is_retweet"] == True:
-                ## we need to change the original also
+                # we need to change the original also
                 original_query = {"_id": to_delete_tweet["before_tweet_id"]}
-                original_update = { "$pull": { "retweet_list": { "$in": [ tweet_id ] } }, 
+                original_update = {"$pull": { "retweet_list": { "$in": [ tweet_id ] } }, 
                                     "$inc": { "retweet_count": -1 }, 
                                     "$pull": { "retweet_user_list": { "$in": [ user_id ] } }}
                 tweet_ori_update = self.db.tweets.update_one(original_query, original_update)
@@ -82,7 +87,7 @@ class TweetAll:
             res['code'] = 500
         return res
     
-    def view(self, user_id, tweet_id):
+    def view(self, tweet_id):
         res = {}
         try:
             if tweet_id == '' or None:
@@ -107,7 +112,7 @@ class TweetAll:
             tweet_data = self.db.tweets.find_one(tweet_query)
             tolike = 1
             for i in tweet_data['fav_list']:
-                ## here we check, if user has already liked the tweet, if yes he now will unlike the tweet
+                # here we check, if user has already liked the tweet, if yes he now will unlike the tweet
                 if i == user_id:
                     tolike = 0
             if tolike == 1:

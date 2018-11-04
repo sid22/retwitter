@@ -9,7 +9,12 @@ Postman Service Internship Assignment
 Re Twitter Assignment - complete with all basic, extended and extra credit functionalities.
 
 Postman Collection of all the endpoints with valid request/responses 
+
 [https://documenter.getpostman.com/view/3851689/RzZ6HL3A](https://documenter.getpostman.com/view/3851689/RzZ6HL3A)
+
+The whole APP hosted on Google Cloud
+
+[https://postman-221411.appspot.com](https://postman-221411.appspot.com)
 
 ## Table of contents
 - [Installation](#installation)
@@ -174,9 +179,30 @@ The reports are hosted on Github pages and can be seen [Coverage Report](https:/
 
 The project has also been integrated with Travis CI system to automate testing and keep a build status.
 
-Currently the coverage of tests is 89%.
+Currently the coverage of tests is 88%.
 
 Travis Builds can be seen [Travis Builds](https://travis-ci.org/sid22/retwitter)
+
+To run all tests locally
+```
+python manage.py test --verbosity 3
+```
+
+To run tests for account componenet only
+```
+python manage.py test account/ --verbosity 3
+```
+
+To run tests for tweet componenet only
+```
+python manage.py test tweets/ --verbosity 3
+```
+
+To run all tests and fresh generate a coverage report ( in /docs folder )
+```
+python getcoverage.py
+```
+
 <!-- [![codecov](https://codecov.io/gh/sid22/retwitter/branch/master/graph/badge.svg)](https://codecov.io/gh/sid22/retwitter) -->
 
 ----
