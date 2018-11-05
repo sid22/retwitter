@@ -72,7 +72,7 @@ class TweetAll:
                 # we need to change the original also
                 original_query = {"_id": to_delete_tweet["before_tweet_id"]}
                 original_update = { "$inc": { "retweet_count": -1 },
-                                    "$pull": { "retweet_user_list": user_id , "retweet_list": tweet_id  } }
+                                    "$pull": { "retweet_user_list": user_id, "retweet_list": tweet_id } }
                 tweet_ori_update = self.db.tweets.update_one(original_query, original_update)
                 deleted_tweet = self.db.tweets.delete_one({"_id": tweet_id})
             elif to_delete_tweet["is_reply"] == True:
@@ -106,7 +106,7 @@ class TweetAll:
         try:
             if tweet_id == '' or None:
                 raise EmptyException("tweet id")
-            tweet_view = self.db.tweets.find_one({"_id": tweet_id})
+            tweet_view = self.db.tweets.find_one( {"_id": tweet_id} )
             res['message'] = {"Success": "Tweet fetched succesfully!", "tweet": tweet_view}
             res['code'] = 200
         except EmptyException as e:
@@ -230,7 +230,7 @@ class TweetAll:
                 "thread_id": None,
             }
             new_reply = self.db.tweets.insert_one(reply_obj)
-            update_query = { "$push": { "replies": { "$each": [ reply_obj["_id"] ] } },
+            update_query = { "$push": { "replies": reply_obj["_id"] },
                             "$inc": { "replies_count": 1 } }
             update_orig_tweet = self.db.tweets.update_one(tweet_query, update_query, upsert=False)
             success_msg = str("Reply with id " + reply_obj["_id"] + " created for tweet with id " + tweet_id + " by user with id " + user_id)
