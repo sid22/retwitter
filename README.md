@@ -48,11 +48,7 @@ The project is a set of APIs made with the Django Framework in Python language. 
 [(Back to top)](#table-of-contents)
 
 To run the project locally, firstly the user must either:
-- Set a local environment variable "ENVIRONMENT" to "production" so that the local instance connects to MLab MongoDB and RedisLabs Redis
-   ```
-    export ENVIRONMENT=production
-   ```
-- Or have a local instance of Mongod Server ( Port: 27017 ) and Redis Server ( Port: 6379 ) running on standard ports on local machine. Both should not have authentication enabled. If auth settings are to be put, in [retwitter/settings.py](retwitter/settings.py) kindly add the same.
+Have a local instance of Mongod Server ( Port: 27017 ) and Redis Server ( Port: 6379 ) running on standard ports on local machine. Both should not have authentication enabled. If auth settings are to be put, in [retwitter/settings.py](retwitter/settings.py) kindly add the same.
 
 ----
 ### Setup instructions

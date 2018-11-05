@@ -32,7 +32,7 @@ class UserAuth:
         '''
         res = {}
         try:
-            if auth_token == None or '':
+            if auth_token == None:
                 raise TokenNotPresent
             cache_val = self.r_cache.get(auth_token)
             if cache_val == 0 or cache_val == None:
@@ -134,7 +134,7 @@ class UserAuth:
             res['code'] = 200   
 
         except UserNotFound:
-            res['message'] = {"Error": "The user to be followed does not exist"}
+            res['message'] = {"Error": "The user to be unfollowed does not exist"}
             res['code'] = 406   
         except CannotFollowItself:
             res['message'] = {"Error": user_main['username'] + " cannot follow/unfollow itself"}

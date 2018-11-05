@@ -110,9 +110,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/reports/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "docs")
+]
 
-if os.environ.get('ENVIRONMENT') == None or 'local':
+if os.environ.get('ENVIRONMENT') == None:
     MONGO_URL = 'localhost'
     MONGO_PORT = str(27017)
     MONGO_URI = "mongodb://" + MONGO_URL + ":" + MONGO_PORT + "/"
@@ -136,7 +139,6 @@ elif os.environ.get('ENVIRONMENT') == 'production':
     REDIS_PORT = os.environ['REDIS_PORT']
     REDIS_PASSWORD = os.environ['REDIS_PASSWORD']
     JWT_SECRET = os.environ['JWT_SECRET_KEY']
-    SECURE_SSL_REDIRECT = True
     
 client = MongoClient(MONGO_URI)
 DB = client.postman
