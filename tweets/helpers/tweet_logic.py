@@ -71,15 +71,14 @@ class TweetAll:
             if to_delete_tweet["is_retweet"] == True:
                 # we need to change the original also
                 original_query = {"_id": to_delete_tweet["before_tweet_id"]}
-                original_update = {"$pull": { "retweet_list": { "$in": [ tweet_id ] } },
-                                    "$inc": { "retweet_count": -1 },
-                                    "$pull": { "retweet_user_list": { "$in": [ user_id ] } }}
+                original_update = { "$inc": { "retweet_count": -1 },
+                                    "$pull": { "retweet_user_list": user_id , "retweet_list": tweet_id  } }
                 tweet_ori_update = self.db.tweets.update_one(original_query, original_update)
                 deleted_tweet = self.db.tweets.delete_one({"_id": tweet_id})
             elif to_delete_tweet["is_reply"] == True:
                 ## we need to change the original also
                 original_query = {"_id": to_delete_tweet["before_tweet_id"]}
-                original_update = { "$pull": { "replies": { "$in": [ tweet_id ] } },
+                original_update = { "$pull": { "replies": tweet_id },
                                     "$inc": { "replies_count": -1 } }
                 tweet_ori_update = self.db.tweets.update_one(original_query, original_update)
                 deleted_tweet = self.db.tweets.delete_one({"_id": tweet_id})
@@ -135,12 +134,12 @@ class TweetAll:
                 if i == user_id:
                     tolike = 0
             if tolike == 1:
-                update_query = { "$push": { "fav_list": { "$each": [ user_id ] } }, "$inc": { "fav_count": 1 } }
+                update_query = { "$push": { "fav_list": user_id }, "$inc": { "fav_count": 1 } }
                 update_tweet = self.db.tweets.update_one(tweet_query, update_query, upsert=False)
                 res['message'] = {"Success": "Tweet with id " + tweet_id + " liked succesfully by user with id " + user_id }
                 res['code'] = 200
             elif tolike == 0:
-                update_query = { "$pull": { "fav_list": { "$in": [ user_id ] } }, "$inc": { "fav_count": -1 } }
+                update_query = { "$pull": { "fav_list": user_id }, "$inc": { "fav_count": -1 } }
                 update_tweet = self.db.tweets.update_one(tweet_query, update_query, upsert=False)
                 res['message'] = {"Success": "Tweet with id " + tweet_id + " unliked succesfully by user with id " + user_id }
                 res['code'] = 200
@@ -183,10 +182,8 @@ class TweetAll:
                 "thread_id": None,
             }
             new_tweet = self.db.tweets.insert_one(retweet_tweet)
-            update_query = { "$push": { "retweet_list": { "$each": [ retweet_tweet["_id"] ] } },
-                            "$inc": { "retweet_count": 1 },
-                            "$push": { "retweet_user_list": { "$each": [ user_id ] } }
-                            }
+            update_query = {"$inc": { "retweet_count": 1 },
+                            "$push": { "retweet_user_list": user_id, "retweet_list": new_tweet.inserted_id } }
             update_orig_tweet = self.db.tweets.update_one(tweet_query, update_query, upsert=False)
             success_msg = str("Retweet with id " + retweet_tweet["_id"] + " created for tweet with id " + tweet_id + " by user with id " + user_id)
             res['message'] = {"Success": success_msg, "retweet_id": retweet_tweet["_id"] }
