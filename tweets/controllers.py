@@ -35,6 +35,7 @@ def handle_tweet(request, tweet_id):
     '''
     auth_token = request.META.get('HTTP_AUTHORIZATION', '')
     res = user_auth.check_auth(auth_token)
+    print(res)
     if res['code'] == 200:
         if request.method == 'DELETE':
             res = tweet.delete(res['user_id'], tweet_id)

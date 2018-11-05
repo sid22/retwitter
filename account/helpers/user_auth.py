@@ -32,7 +32,7 @@ class UserAuth:
         '''
         res = {}
         try:
-            if auth_token == None:
+            if auth_token == None or '':
                 raise TokenNotPresent
             cache_val = self.r_cache.get(auth_token)
             if cache_val == 0 or cache_val == None:
