@@ -239,7 +239,7 @@ class TweetHandlerTests(unittest.TestCase):
         res1 = self.tweet_all.retweet(user_id, tweet_id[0])
         res2 = self.tweet_all.retweet(user_id, tweet_id[1])
         self.assertEqual(res1['code'], 400)
-        self.assertEqual(res2['code'], 200)
+        self.assertEqual(res2['code'], 500)
 
     @patch('pymongo.collection.Collection.find_one')
     @patch('pymongo.collection.Collection.insert_one')
