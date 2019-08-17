@@ -10,7 +10,7 @@ jobs:
         python-version: [3.6]
 
     steps:
-    - uses: actions/checkout@$GITHUB_SHA
+    - uses: actions/checkout@master
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
