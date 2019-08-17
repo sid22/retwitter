@@ -1,5 +1,5 @@
 # retwitter
-Postman Service Internship Assignment
+Postman Service Internship  Assignment
 
 ![Python](https://img.shields.io/badge/Python-3.6-green.svg)
 ![Django](https://img.shields.io/badge/Django-2.1-orange.svg)
