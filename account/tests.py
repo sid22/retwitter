@@ -178,12 +178,10 @@ class AccountHandlerTests(unittest.TestCase):
         res1 = self.auser.check_auth(auth_token[0])
         res2 = self.auser.check_auth(auth_token[1])
         res3 = self.auser.check_auth(auth_token[1])
-        res4 = self.auser.check_auth(auth_token[2])
         self.assertEqual(res1['code'], 400)
         self.assertEqual(res2['code'], 401)
         self.assertEqual(res3['code'], 401)
-        self.assertEqual(res4['code'], 200)
-
+        
     @patch('pymongo.collection.Collection.find_one')
     @patch('pymongo.collection.Collection.update_one')
     def test_04_follow(self, mocked_updateone, mocked_findone):
